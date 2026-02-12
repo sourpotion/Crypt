@@ -1,12 +1,16 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UiLogic : MonoBehaviour
 {
-    [Header("Settings")]
+    [Header("Must")]
     public GameObject startSchrem; // Where it Start
+    public GameObject loadingScreenUi; //frame of the ui
+    public Slider progessBar; // slider of the progessBar
 
     private GameObject currentUi; 
     private String startSceneName = "SampleScene"; // here go the name of the startScene
@@ -15,6 +19,7 @@ public class UiLogic : MonoBehaviour
     void Start()
     {
         currentUi = startSchrem;
+        currentUi.SetActive(true);
 
         if (currentUi == null) { Debug.LogWarning("u need to do a public startSchrem AUB"); } //{} is more readable* 
     }
@@ -25,11 +30,25 @@ public class UiLogic : MonoBehaviour
         
     }
 
+    IEnumerator LoadScene(string sceneToLoad)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad);
+
+        loadingScreenUi.SetActive(true);
+
+        while (!operation.isDone)
+        {
+            float progess = progessBar.value;
+            progessBar.value = progess;
+
+            yield return null;
+        }
+    }
+
     public void StartGame()
     {
-        print("The update of later sceneLoader come soon here");
-
-        SceneManager.LoadScene(startSceneName);
+        currentUi.SetActive(false); //so u don't see this
+        StartCoroutine(LoadScene(startSceneName)); //loadingScreen need wait
     }
 
     public void QuitGame()
