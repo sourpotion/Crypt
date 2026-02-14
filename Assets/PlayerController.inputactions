@@ -1,0 +1,77 @@
+{
+    "version": 1,
+    "name": "PlayerController",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "c0d6f9a5-3c40-4f57-9a6e-d6531b68756e",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "9e340e6b-cc35-492f-b0ec-4a083494202a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "9e0317fb-1f1f-4b03-881a-c1ff385be7b4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "HorizonTal",
+                    "id": "d176851c-3979-4c23-bd6c-808aac347e78",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "3591b8da-ef28-442e-8cfb-aca6b99660e8",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "e9e4b0bd-6f06-40d1-b61d-c555d092b850",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "f7dd18a3-9107-4cab-af15-fb9ee505396f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
