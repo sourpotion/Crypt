@@ -21,8 +21,9 @@ public class PlayerScript : MonoBehaviour
     {
         transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
         transform.Translate(move * movespeed * Time.deltaTime);
+
 
         if (stamina > 20)
         {
