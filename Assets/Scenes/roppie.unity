@@ -519,10 +519,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1720014508}
+  - component: {fileID: 1720014509}
   - component: {fileID: 1720014507}
   - component: {fileID: 1720014506}
   - component: {fileID: 1720014505}
-  - component: {fileID: 1720014509}
   - component: {fileID: 1720014510}
   m_Layer: 0
   m_Name: Player
@@ -643,6 +643,8 @@ MonoBehaviour:
   stamina: 100
   fov: 0
   sprintIncreaser: 0
+  staminaDecreaser: 0.5
+  staminaIncreaser: 0.1
   isSprinting: 0
   regenerator: 0
   mainCamera: {fileID: 1290687779}
