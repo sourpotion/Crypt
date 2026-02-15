@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    public float sensitivity, movespeed, stamina, fov, sprintIncreaser;
+    public float sensitivity, movespeed, stamina, fov, sprintIncreaser, staminaDecreaser, staminaIncreaser;
     public bool isSprinting, regenerator;
     public GameObject mainCamera;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        float fov = mainCamera.GetComponent<Camera>().fieldOfView;        isSprinting = false;
+        float fov = mainCamera.GetComponent<Camera>().fieldOfView; isSprinting = false;
         regenerator = true;
         stamina = 100;
         sprintIncreaser = 1.75f;
@@ -33,8 +33,11 @@ public class PlayerScript : MonoBehaviour
                 regenerator = false;
                 Camera.main.fieldOfView = 75f;
             }
+        }
 
-            if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            if (isSprinting == true)
             {
                 movespeed /= sprintIncreaser;
                 isSprinting = false;
@@ -45,13 +48,13 @@ public class PlayerScript : MonoBehaviour
 
         if (isSprinting == true)
         {
-            stamina -= 0.25f;
+            stamina -= staminaDecreaser;
         }
 
         if (stamina < 0)
         {
             if (isSprinting == true)
-            {
+            {   
                 movespeed /= sprintIncreaser;
                 stamina = 0;
                 FovEffectReset();
@@ -62,7 +65,7 @@ public class PlayerScript : MonoBehaviour
 
         if (regenerator == true)
         {
-            stamina += 0.05f;
+            stamina += staminaIncreaser;
         }
 
         if (stamina > 100)
@@ -70,7 +73,6 @@ public class PlayerScript : MonoBehaviour
             stamina = 100;
             regenerator = false;
         }
-
     }
 
     public void FovEffectReset()
