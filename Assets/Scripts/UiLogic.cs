@@ -49,6 +49,10 @@ public class UiLogic : MonoBehaviour
     private float minVolume = -80;
     private PlayerController plrControl;
 
+    //saving for old setting in pause
+    private CursorLockMode oldCursorLockMode; //so when in puzzle mabye then i don't have to check and fix that th emouse is not gona first person
+    private bool oldCursorVisible;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -119,7 +123,30 @@ public class UiLogic : MonoBehaviour
     {
         currentUi.SetActive(false);
 
-        if (!gameIsPause) {Time.timeScale = 0;} else {Time.timeScale = 1;} //pause the game*
+        //pause the game and unlokc the mouse
+        if (!gameIsPause) 
+        {
+            //pause the game
+            Time.timeScale = 0;
+            
+            //save the oldMouse settings
+            oldCursorLockMode = Cursor.lockState;
+            oldCursorVisible = Cursor.visible;
+
+            //make the mouse visible
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        } 
+        else 
+        {
+            // pause the game
+            Time.timeScale = 1;
+
+            //load the old mouse settings
+            Cursor.lockState = oldCursorLockMode;
+            Cursor.visible = oldCursorVisible;
+        }
+
         startSchrem.SetActive(!gameIsPause); // it can just deactive a deavtive ui*
         currentUi = startSchrem;
 
@@ -257,6 +284,7 @@ public class UiLogic : MonoBehaviour
     {
         return PlayerPrefs.GetFloat(key, 1f);
     }
+    
     string LoadKeyBinds(string key) //key == nameOfTheAction + Keybind
     {
         return PlayerPrefs.GetString(key, "");
