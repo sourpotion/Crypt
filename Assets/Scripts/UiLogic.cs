@@ -44,7 +44,6 @@ public class UiLogic : MonoBehaviour
     public KeyRebinding[] keyRebinding; //so it can be save and loaded
 
     private GameObject currentUi; 
-    private String[] sceneNames = {"SampleScene", "SampleScene"}; // id of the scene first is 0 sconf is 1 so on
     private bool gameIsPause = false; //so when it is pause with esc u can go out
     private float maxVolume = 20;
     private float minVolume = -80;
@@ -60,6 +59,7 @@ public class UiLogic : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Unity version: " + Application.unityVersion);
         currentUi = startSchrem;
 
         foreach (Audios audioInfo in audios)
@@ -141,10 +141,8 @@ public class UiLogic : MonoBehaviour
         }
     }
 
-    public void SwitchScene(int id)
+    public void SwitchScene(string sceneToLoadName)
     {
-        string sceneToLoadName = sceneNames[id]; //so i don't need 2 funtion /:
-
         currentUi.SetActive(false); //so u don't see this
         StartCoroutine(LoadScene(sceneToLoadName)); //loadingScreen need wait
     }
