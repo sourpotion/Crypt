@@ -8520,7 +8520,7 @@ MonoBehaviour:
   loadingScreenUi: {fileID: 1628359076}
   progessBar: {fileID: 616446082}
   audioMixer: {fileID: 24100000, guid: 065c28fa2e10eae4db89bccae7dc7544, type: 2}
-  inGame: 0
+  inGame: 1
   audios:
   - audioName: Master
     slider: {fileID: 1337925628}
