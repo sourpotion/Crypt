@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 314577a3a9667514684443dff32baae8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - startSchrem: {instanceID: 0}
+  - loadingScreenUi: {instanceID: 0}
+  - progessBar: {instanceID: 0}
+  - audioMixer: {fileID: 24100000, guid: 77ee3c38d7b0cf849b0311d9c5c3a048, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
