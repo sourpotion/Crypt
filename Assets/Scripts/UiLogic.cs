@@ -40,10 +40,10 @@ public class UiLogic : MonoBehaviour
         public Button buttonToActive; //active button
     }
 
-    public Audios[] audios; 
+    public Audios[] audios;
     public KeyRebinding[] keyRebinding; //so it can be save and loaded
 
-    private GameObject currentUi; 
+    private GameObject currentUi;
     private bool gameIsPause = false; //so when it is pause with esc u can go out
     private float maxVolume = 20;
     private float minVolume = -80;
@@ -67,12 +67,12 @@ public class UiLogic : MonoBehaviour
 
         foreach (Audios audioInfo in audios)
         {
-            audioInfo.slider.onValueChanged.AddListener((value) => {ChangeSound(audioInfo.slider.value, audioInfo.audioName);}); //add the functionEvent to the slider
+            audioInfo.slider.onValueChanged.AddListener((value) => { ChangeSound(audioInfo.slider.value, audioInfo.audioName); }); //add the functionEvent to the slider
         }
 
         foreach (KeyRebinding info in keyRebinding)
         {
-            info.buttonToActive.onClick.AddListener(() => {RebindKey(info);}); //but the action of rebind into the button
+            info.buttonToActive.onClick.AddListener(() => { RebindKey(info); }); //but the action of rebind into the button
         }
 
         Reset(); //resetTheAudios and the keybinds
@@ -83,11 +83,11 @@ public class UiLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    
+
     //on press
-    
+
     void OnEnable()  //little ai but it make it enable
     {
         plrControl.Enable();
@@ -122,11 +122,11 @@ public class UiLogic : MonoBehaviour
         currentUi.SetActive(false);
 
         //pause the game and unlokc the mouse
-        if (!gameIsPause) 
+        if (!gameIsPause)
         {
             //pause the game
             Time.timeScale = 0;
-            
+
             //save the oldMouse settings
             oldCursorLockMode = Cursor.lockState;
             oldCursorVisible = Cursor.visible;
@@ -134,8 +134,8 @@ public class UiLogic : MonoBehaviour
             //make the mouse visible
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-        } 
-        else 
+        }
+        else
         {
             // pause the game
             Time.timeScale = 1;
@@ -174,9 +174,9 @@ public class UiLogic : MonoBehaviour
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false; //turn off when in testingMode
-        #endif
+#endif
 
         Application.Quit(); // quit the game...
     }
@@ -193,7 +193,7 @@ public class UiLogic : MonoBehaviour
     {
         InputAction action = plrControl.asset.FindAction(info.actionName);
         info.text.text = "...";
-        
+
         // Disable action before rebinding
         action.Disable();
 
@@ -202,7 +202,7 @@ public class UiLogic : MonoBehaviour
             {
                 operation.Dispose(); //make the keybind true
                 action.Enable();
-                
+
                 // put the text to the new key
                 string keybindName = action.bindings[0].ToDisplayString(); //get the string of the new key
                 info.text.text = keybindName;
@@ -234,7 +234,7 @@ public class UiLogic : MonoBehaviour
             {
                 var action = plrControl.asset.FindAction(info.actionName);
                 string keybindPath = LoadKeyBinds(info.actionName + "Keybind");
-                
+
                 if (!string.IsNullOrEmpty(keybindPath))
                 {
                     action.ApplyBindingOverride(0, keybindPath); //pput the newOne in here
@@ -250,7 +250,7 @@ public class UiLogic : MonoBehaviour
             foreach (Audios audiosInfo in audios) //but the slider good
             {
                 float currentVolume;
-                if (!audioMixer.GetFloat(audiosInfo.audioName, out currentVolume)) {currentVolume = 0f;} //get the volume of the audio
+                if (!audioMixer.GetFloat(audiosInfo.audioName, out currentVolume)) { currentVolume = 0f; } //get the volume of the audio
                 float newValue = Mathf.InverseLerp(minVolume, maxVolume, currentVolume); //reverse to get value
 
                 audiosInfo.slider.value = newValue;
@@ -263,7 +263,7 @@ public class UiLogic : MonoBehaviour
                 info.text.text = action.bindings[0].ToDisplayString(); //show the current keybind 
             }
         }
-    } 
+    }
 
     void OnApplicationQuit()
     {
@@ -282,7 +282,7 @@ public class UiLogic : MonoBehaviour
     {
         return PlayerPrefs.GetFloat(key, 1f);
     }
-    
+
     string LoadKeyBinds(string key) //key == nameOfTheAction + Keybind
     {
         return PlayerPrefs.GetString(key, "");

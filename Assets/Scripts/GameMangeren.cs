@@ -4,7 +4,7 @@ public class GameMangeren : MonoBehaviour
 {
     public static GameMangeren Instance { get; private set; } //make it global
 
-    public bool audioSaveAlreadyDone = false;
+    [HideInInspector] public bool audioSaveAlreadyDone = false;
 
     void Awake()
     {

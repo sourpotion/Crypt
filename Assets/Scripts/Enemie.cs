@@ -1,10 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Timeline;
 
 public class Enemie : MonoBehaviour
 {
@@ -20,17 +23,21 @@ public class Enemie : MonoBehaviour
     public float runSpeed = 8f; //speed while running
     public float angerTime = 4f; //time before losing u
     public float lookingAroundDuration = 1f; //time that it look Around
+    public float timeBeforeUsingAbility = 1f;
 
     [System.Serializable]
     public class PartrolsArea
     {
         public GameObject patrolsFolders; //so u don't have to do this 100 times just the areaFolders
+        public GameObject[] areaTrigger; //area that say u there
         [HideInInspector] public GameObject[] partrols; //partrolls where he can walk
         [HideInInspector] public int ttPartrols; // totale partrolls there are 
     } 
 
     public PartrolsArea[] partrolsAreas; //sooon folders but for now //so u don't have to do this 100 times just the areaFolders
+    public GameObject camFolder;
     public GameObject target; //the plr
+    [HideInInspector] public int areaId = 0;
 
     [Header("Debug")]
     private string targetTag = "Player";
@@ -41,7 +48,9 @@ public class Enemie : MonoBehaviour
     private float currentTimerOfAnger;
     private NavMeshAgent agent;
     private int layerMaskRaycast; //thign where raycast can't past through
-
+    private List<Cam> activeCams = new List<Cam>();
+    private List<Cam> unActiveCams = new List<Cam>();
+    private float timeWithoutSeeingThePlr;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -50,13 +59,25 @@ public class Enemie : MonoBehaviour
         Setup();
     }
 
-    protected virtual void Setup() //so the game don't lag
+    protected virtual void Setup() 
     {
         layerMaskRaycast = ~LayerMask.GetMask("Ignore RayCast"); //setup
         agent = GetComponent<NavMeshAgent>();
 
-        foreach (PartrolsArea partrolInfo in partrolsAreas)
+        for (int id = 0; id < partrolsAreas.Length; id++)
         {
+            PartrolsArea partrolInfo = partrolsAreas[id];
+
+            //give the script to the area to see the plr
+            foreach (GameObject area in partrolInfo.areaTrigger)
+            {
+                InWichAreaIsThePlr newScript = area.AddComponent<InWichAreaIsThePlr>(); //add script
+            
+                //fix the value of the script
+                newScript.areaId = id;
+                newScript.enemieScript = gameObject.GetComponent<Enemie>();
+            }
+
             //look up the totale partrolls there are
             partrolInfo.ttPartrols = partrolInfo.patrolsFolders.transform.childCount; 
 
@@ -70,6 +91,15 @@ public class Enemie : MonoBehaviour
             }
         }
 
+        //set the all of the cam to camActive
+        int ttCams = camFolder.transform.childCount;
+
+        for (int i = 0; i < ttCams; i++)
+        {
+            Cam camScript = camFolder.transform.GetChild(i).gameObject.GetComponent<Cam>();
+            unActiveCams.Add(camScript);
+        }
+
         //settings
         agent.speed = walkSpeed;
     }
@@ -77,6 +107,8 @@ public class Enemie : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        timeWithoutSeeingThePlr += Time.deltaTime;
+
         if (SeeThePlr())
         {
             GetAnger();
@@ -109,6 +141,11 @@ public class Enemie : MonoBehaviour
                 Think();
             }
         }
+
+        if (timeWithoutSeeingThePlr >= timeBeforeUsingAbility)
+        {
+            Ability();
+        }
     }
 
     protected virtual void Think() //for now always id0  for testing
@@ -126,12 +163,27 @@ public class Enemie : MonoBehaviour
         state = "partrolling";
 
         //getRngTargetPoint
-        PartrolsArea partrolInfo = partrolsAreas[0]; //testing
+        PartrolsArea partrolInfo = partrolsAreas[areaId];
         int rngNumber = UnityEngine.Random.Range(0, partrolInfo.ttPartrols - 1);
         GameObject walkTarget = partrolInfo.partrols[rngNumber];
         
         //go to the point
         GoToTarget(walkTarget.transform.position);
+    }
+
+    protected virtual void Ability()
+    {
+        if (unActiveCams.Count == 0) {timeWithoutSeeingThePlr = 0; return;}
+
+        int rngNumber = UnityEngine.Random.Range(0, unActiveCams.Count);
+        Cam camToActive = unActiveCams[rngNumber];
+        unActiveCams.Remove(camToActive);
+
+        activeCams.Add(camToActive);
+        camToActive.SetEnemieOnCam(target);
+        camToActive.seePlr += GetAnger;
+
+        timeWithoutSeeingThePlr = 0;
     }
 
     protected virtual IEnumerator LookAround()
@@ -152,9 +204,19 @@ public class Enemie : MonoBehaviour
             agent.speed = runSpeed;
             chaseSound.Play();
             state = "Chasing";
+
+            for (int i = 0; i < activeCams.Count; i++)
+            {
+                Cam oldCam = activeCams[i];
+                oldCam.TurnOffCam();
+
+                activeCams.RemoveAt(i);
+                unActiveCams.Add(oldCam);
+            }
         }
 
         currentTimerOfAnger = 0f;
+        timeWithoutSeeingThePlr = 0f;
     }
 
     protected virtual void GoToTarget(Vector3 targetPos)
