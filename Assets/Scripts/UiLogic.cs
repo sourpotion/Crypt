@@ -63,7 +63,6 @@ public class UiLogic : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Unity version: " + Application.unityVersion);
         currentUi = startSchrem;
 
         foreach (Audios audioInfo in audios)
@@ -114,7 +113,6 @@ public class UiLogic : MonoBehaviour
     public void ChangeSound(float newValue, string soundName)
     {
         float newVolume = Mathf.Lerp(minVolume, maxVolume, newValue);
-        print(soundName);
 
         audioMixer.SetFloat(soundName, newVolume);
     }
