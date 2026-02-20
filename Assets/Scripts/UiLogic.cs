@@ -44,7 +44,6 @@ public class UiLogic : MonoBehaviour
     public KeyRebinding[] keyRebinding; //so it can be save and loaded
 
     private GameObject currentUi;
-    private bool gameIsPause = false; //so when it is pause with esc u can go out
     private float maxVolume = 20;
     private float minVolume = -80;
     private PlayerController plrControl;
@@ -64,6 +63,7 @@ public class UiLogic : MonoBehaviour
     void Start()
     {
         currentUi = startSchrem;
+        GameMangeren.Instance.gameIsPause = false;
 
         foreach (Audios audioInfo in audios)
         {
@@ -122,7 +122,7 @@ public class UiLogic : MonoBehaviour
         currentUi.SetActive(false);
 
         //pause the game and unlokc the mouse
-        if (!gameIsPause)
+        if (!GameMangeren.Instance.gameIsPause)
         {
             //pause the game
             Time.timeScale = 0;
@@ -145,10 +145,10 @@ public class UiLogic : MonoBehaviour
             Cursor.visible = oldCursorVisible;
         }
 
-        startSchrem.SetActive(!gameIsPause); // it can just deactive a deavtive ui*
+        startSchrem.SetActive(!GameMangeren.Instance.gameIsPause); // it can just deactive a deavtive ui*
         currentUi = startSchrem;
 
-        gameIsPause = !gameIsPause; //toggle this
+        GameMangeren.Instance.gameIsPause = !GameMangeren.Instance.gameIsPause; //toggle this
     }
 
     IEnumerator LoadScene(string sceneToLoad)

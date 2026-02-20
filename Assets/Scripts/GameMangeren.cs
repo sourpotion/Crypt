@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
 
 public class GameMangeren : MonoBehaviour
 {
     public static GameMangeren Instance { get; private set; } //make it global
 
-    [HideInInspector] public bool audioSaveAlreadyDone = false;
+    [HideInInspector] public bool audioSaveAlreadyDone = false; //so it not loading again
+    [HideInInspector] public bool gameIsPause; // of the game is paused
+    [HideInInspector] public Action<Vector3, float> onMakingNoise; //send to everybody who want hear
 
     void Awake()
     {

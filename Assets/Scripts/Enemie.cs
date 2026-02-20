@@ -37,6 +37,7 @@ public class Enemie : MonoBehaviour
     public PartrolsArea[] partrolsAreas; //sooon folders but for now //so u don't have to do this 100 times just the areaFolders
     public GameObject camFolder;
     public GameObject target; //the plr
+    public GameObject audiosCamsFolder;
     [HideInInspector] public int areaId = 0;
 
     [Header("Debug")]
@@ -99,6 +100,8 @@ public class Enemie : MonoBehaviour
             Cam camScript = camFolder.transform.GetChild(i).gameObject.GetComponent<Cam>();
             unActiveCams.Add(camScript);
         }
+
+        SecondAbility();
 
         //settings
         agent.speed = walkSpeed;
@@ -222,6 +225,16 @@ public class Enemie : MonoBehaviour
     protected virtual void GoToTarget(Vector3 targetPos)
     {
         agent.SetDestination(targetPos);
+    }
+
+    protected virtual void SecondAbility()
+    {
+        //get all child then add the event
+        foreach (Transform audioCam in audiosCamsFolder.transform)
+        {
+            MicrophoneCam microphoneCam = audioCam.GetComponent<MicrophoneCam>();
+            microphoneCam.onEnemieHear += GetAnger;
+        }
     }
 
     protected virtual void Attack()
