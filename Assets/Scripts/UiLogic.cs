@@ -26,22 +26,22 @@ public class UiLogic : MonoBehaviour
     public bool inGame;
 
     [System.Serializable]
-    public class Audios
+    private class Audios
     {
         public string audioName; //name of the exposed parameter of the audio 
         public Slider slider; //slider that say the value of the sound
     }
 
     [System.Serializable]
-    public class KeyRebinding
+    private class KeyRebinding
     {
         public string actionName; //binding of the keybind like pause or jump
         public TextMeshProUGUI text; //text to change when using the rebindFunction
         public Button buttonToActive; //active button
     }
 
-    public Audios[] audios;
-    public KeyRebinding[] keyRebinding; //so it can be save and loaded
+    [SerializeField] private Audios[] audios;
+    [SerializeField] private KeyRebinding[] keyRebinding; //so it can be save and loaded
 
     private GameObject currentUi;
     private float maxVolume = 20;

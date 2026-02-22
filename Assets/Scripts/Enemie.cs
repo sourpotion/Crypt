@@ -11,9 +11,6 @@ using UnityEngine.Timeline;
 
 public class Enemie : MonoBehaviour
 {
-    [Header("Must")]
-    public AudioSource chaseSound;
-
     [Header("Stats")]
     
     public float viewDisant = 100f; //disant to see the plr
@@ -23,10 +20,12 @@ public class Enemie : MonoBehaviour
     public float runSpeed = 8f; //speed while running
     public float angerTime = 4f; //time before losing u
     public float lookingAroundDuration = 1f; //time that it look Around
-    public float timeBeforeUsingAbility = 1f;
+
+    [Header("Must")]
+    public AudioSource chaseSound;
 
     [System.Serializable]
-    public class PartrolsArea
+    protected class PartrolsArea
     {
         public GameObject patrolsFolders; //so u don't have to do this 100 times just the areaFolders
         public GameObject[] areaTrigger; //area that say u there
@@ -34,33 +33,25 @@ public class Enemie : MonoBehaviour
         [HideInInspector] public int ttPartrols; // totale partrolls there are 
     } 
 
-    public PartrolsArea[] partrolsAreas; //sooon folders but for now //so u don't have to do this 100 times just the areaFolders
+    [SerializeField] protected PartrolsArea[] partrolsAreas; //sooon folders but for now //so u don't have to do this 100 times just the areaFolders
     public GameObject camFolder;
     public GameObject target; //the plr
     public GameObject audiosCamsFolder;
     [HideInInspector] public int areaId = 0;
 
     [Header("Debug")]
-    private string targetTag = "Player";
-    [SerializeField] private string state = "Idle"; //debug
-    private bool isAnger;
-    private bool alrHaveLookAround = false; //so the think can't be active
-    private bool isLookingAround = false; //debounce
-    private float currentTimerOfAnger;
-    private NavMeshAgent agent;
-    private int layerMaskRaycast; //thign where raycast can't past through
-    private List<Cam> activeCams = new List<Cam>();
-    private List<Cam> unActiveCams = new List<Cam>();
-    private float timeWithoutSeeingThePlr;
+    protected string targetTag = "Player";
+    [SerializeField] protected string state = "Idle"; //debug
+    protected bool isAnger;
+    protected bool alrHaveLookAround = false; //so the think can't be active
+    protected bool isLookingAround = false; //debounce
+    protected float currentTimerOfAnger;
+    protected NavMeshAgent agent;
+    protected int layerMaskRaycast; //thign where raycast can't past through
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Setup();
-    }
-
-    protected virtual void Setup() 
+    protected virtual void Start()
     {
         layerMaskRaycast = ~LayerMask.GetMask("Ignore RayCast"); //setup
         agent = GetComponent<NavMeshAgent>();
@@ -92,17 +83,6 @@ public class Enemie : MonoBehaviour
             }
         }
 
-        //set the all of the cam to camActive
-        int ttCams = camFolder.transform.childCount;
-
-        for (int i = 0; i < ttCams; i++)
-        {
-            Cam camScript = camFolder.transform.GetChild(i).gameObject.GetComponent<Cam>();
-            unActiveCams.Add(camScript);
-        }
-
-        SecondAbility();
-
         //settings
         agent.speed = walkSpeed;
     }
@@ -110,8 +90,6 @@ public class Enemie : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        timeWithoutSeeingThePlr += Time.deltaTime;
-
         if (SeeThePlr())
         {
             GetAnger();
@@ -144,11 +122,6 @@ public class Enemie : MonoBehaviour
                 Think();
             }
         }
-
-        if (timeWithoutSeeingThePlr >= timeBeforeUsingAbility)
-        {
-            Ability();
-        }
     }
 
     protected virtual void Think() //for now always id0  for testing
@@ -174,21 +147,6 @@ public class Enemie : MonoBehaviour
         GoToTarget(walkTarget.transform.position);
     }
 
-    protected virtual void Ability()
-    {
-        if (unActiveCams.Count == 0) {timeWithoutSeeingThePlr = 0; return;}
-
-        int rngNumber = UnityEngine.Random.Range(0, unActiveCams.Count);
-        Cam camToActive = unActiveCams[rngNumber];
-        unActiveCams.Remove(camToActive);
-
-        activeCams.Add(camToActive);
-        camToActive.SetEnemieOnCam(target);
-        camToActive.seePlr += GetAnger;
-
-        timeWithoutSeeingThePlr = 0;
-    }
-
     protected virtual IEnumerator LookAround()
     {
         isLookingAround = true;
@@ -207,34 +165,14 @@ public class Enemie : MonoBehaviour
             agent.speed = runSpeed;
             chaseSound.Play();
             state = "Chasing";
-
-            for (int i = 0; i < activeCams.Count; i++)
-            {
-                Cam oldCam = activeCams[i];
-                oldCam.TurnOffCam();
-
-                activeCams.RemoveAt(i);
-                unActiveCams.Add(oldCam);
-            }
         }
 
         currentTimerOfAnger = 0f;
-        timeWithoutSeeingThePlr = 0f;
     }
 
     protected virtual void GoToTarget(Vector3 targetPos)
     {
         agent.SetDestination(targetPos);
-    }
-
-    protected virtual void SecondAbility()
-    {
-        //get all child then add the event
-        foreach (Transform audioCam in audiosCamsFolder.transform)
-        {
-            MicrophoneCam microphoneCam = audioCam.GetComponent<MicrophoneCam>();
-            microphoneCam.onEnemieHear += GetAnger;
-        }
     }
 
     protected virtual void Attack()

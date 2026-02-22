@@ -8615,7 +8615,7 @@ GameObject:
   - component: {fileID: 1786316535}
   - component: {fileID: 1786316534}
   - component: {fileID: 1786316533}
-  - component: {fileID: 1786316532}
+  - component: {fileID: 1786316539}
   - component: {fileID: 1786316537}
   - component: {fileID: 1786316538}
   m_Layer: 2
@@ -8625,42 +8625,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1786316532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1786316531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb98baa638c8d264e9b4a9e3bdd94390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemie
-  chaseSound: {fileID: 1463210762}
-  viewDisant: 100
-  viewRadius: 45
-  walkSpeed: 3.5
-  runSpeed: 8
-  angerTime: 4
-  lookingAroundDuration: 1
-  timeBeforeUsingAbility: 10
-  partrolsAreas:
-  - patrolsFolders: {fileID: 611240418}
-    areaTrigger:
-    - {fileID: 19607837}
-    partrols: []
-    ttPartrols: 0
-  - patrolsFolders: {fileID: 1671352556}
-    areaTrigger:
-    - {fileID: 2118058881}
-    partrols: []
-    ttPartrols: 0
-  camFolder: {fileID: 1559045776}
-  target: {fileID: 349688326}
-  audiosCamsFolder: {fileID: 1918235539}
-  areaId: 0
-  state: Idle
 --- !u!136 &1786316533
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8800,6 +8764,42 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1786316539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786316531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e95cf46c99d75b043ac70deee8940d1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TvHeadEnemie
+  viewDisant: 100
+  viewRadius: 45
+  walkSpeed: 3.5
+  runSpeed: 8
+  angerTime: 4
+  lookingAroundDuration: 1
+  chaseSound: {fileID: 1463210762}
+  partrolsAreas:
+  - patrolsFolders: {fileID: 611240418}
+    areaTrigger:
+    - {fileID: 19607837}
+    partrols: []
+    ttPartrols: 0
+  - patrolsFolders: {fileID: 1671352556}
+    areaTrigger:
+    - {fileID: 2118058881}
+    partrols: []
+    ttPartrols: 0
+  camFolder: {fileID: 1559045776}
+  target: {fileID: 349688326}
+  audiosCamsFolder: {fileID: 1918235539}
+  areaId: 0
+  state: Idle
+  timeBeforeUsingAbility: 1
 --- !u!1 &1789700501
 GameObject:
   m_ObjectHideFlags: 0
