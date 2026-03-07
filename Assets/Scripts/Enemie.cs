@@ -199,7 +199,7 @@ public class Enemie : MonoBehaviour
         return true;
     }
 
-    protected virtual void OnCollisionEnter(Collision collision)
+    protected virtual void OnTriggerEnter(Collider collision)
     {
         string hitTag = collision.transform.tag;
 

@@ -126,6 +126,7 @@ public class UiLogic : MonoBehaviour
         {
             //pause the game
             Time.timeScale = 0;
+            AudioListener.pause = true;
 
             //save the oldMouse settings
             oldCursorLockMode = Cursor.lockState;
@@ -139,6 +140,7 @@ public class UiLogic : MonoBehaviour
         {
             // pause the game
             Time.timeScale = 1;
+            AudioListener.pause = false;
 
             //load the old mouse settings
             Cursor.lockState = oldCursorLockMode;
