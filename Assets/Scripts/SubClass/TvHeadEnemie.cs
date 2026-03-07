@@ -6,6 +6,10 @@ public class TvHeadEnemie: Enemie
     [Header("Stats")]
     public float timeBeforeUsingAbility = 1f;
 
+    [Header("Must")]
+    public GameObject camFolder;
+    public GameObject audiosCamsFolder;
+
     private List<Cam> activeCams = new List<Cam>();
     private List<Cam> unActiveCams = new List<Cam>();
     private float timeWithoutSeeingThePlr = 0f;

@@ -34,9 +34,7 @@ public class Enemie : MonoBehaviour
     } 
 
     [SerializeField] protected PartrolsArea[] partrolsAreas; //sooon folders but for now //so u don't have to do this 100 times just the areaFolders
-    public GameObject camFolder;
     public GameObject target; //the plr
-    public GameObject audiosCamsFolder;
     [HideInInspector] public int areaId = 0;
 
     [Header("Debug")]
@@ -124,8 +122,9 @@ public class Enemie : MonoBehaviour
         }
     }
 
-    protected virtual void Think() //for now always id0  for testing
+    protected virtual void Think()
     {
+
         if (!alrHaveLookAround)
         {
             StartCoroutine(LookAround());

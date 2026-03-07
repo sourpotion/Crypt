@@ -1,4 +1,5 @@
 using System.Reflection;
+using DG.Tweening;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -37,6 +38,7 @@ public class HumanoidBody : MonoBehaviour
     [HideInInspector] public float currentInteractionNerf = 0;
 
     private DepthOfField dof;
+    private float colorTweenTime = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -60,6 +62,7 @@ public class HumanoidBody : MonoBehaviour
 
         if (bodyPart == null || bodyPart.broken) {return;} //so it is not gonna be buggy
         bodyPart.broken = true; //deboounce
+        bodyPart.imageOfBody.DOColor(Color.red, colorTweenTime);
 
         //Fire the Function
         string methodName = partName + "Broken";
@@ -83,6 +86,7 @@ public class HumanoidBody : MonoBehaviour
 
         if (bodyPart == null || !bodyPart.broken) {return;} //so it is not gonna be buggy
         bodyPart.broken = false; //debounce
+        bodyPart.imageOfBody.DOColor(Color.black, colorTweenTime);
 
         //Fire the Function
         string methodName = partName + "Healed";
@@ -193,5 +197,13 @@ public class HumanoidBody : MonoBehaviour
 
         Debug.LogWarning(name + " is not a valid name");
         return null;
+    }
+
+    public bool IsBroken(string name)
+    {
+        Bodys bodyPart = GetBody(name);
+        if (bodyPart == null) {Debug.LogWarning("name is invalid: " + name); return false;}
+
+        return bodyPart.broken;
     }
 }
