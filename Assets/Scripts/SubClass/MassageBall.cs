@@ -17,6 +17,7 @@ public class MassageBall: Enemie
     protected override void Start()
     {
         humBody = target.GetComponent<HumanoidBody>();
+        spawnPos = transform.position;
 
         //old one
         for (int id = 0; id < partrolsAreas.Length; id++)
@@ -88,5 +89,10 @@ public class MassageBall: Enemie
         humBody.BreakPart(bodyNames[rngNumber]); //sson random
         transform.position = new Vector3(0, 1000, 0);
         attackDebounce = false; 
+    }
+
+    public override void Respawn()
+    {
+        transform.position = spawnPos;
     }
 }

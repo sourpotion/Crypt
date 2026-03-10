@@ -119,6 +119,8 @@ public class UiLogic : MonoBehaviour
 
     public void TogglePauseGame()
     {
+        if (GameMangeren.Instance.plrDied) {return;} //so u can't pause in a deadscreen
+
         currentUi.SetActive(false);
 
         //pause the game and unlokc the mouse
@@ -176,9 +178,9 @@ public class UiLogic : MonoBehaviour
 
     public void QuitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; //turn off when in testingMode
-#endif
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false; //turn off when in testingMode
+        #endif
 
         Application.Quit(); // quit the game...
     }

@@ -1,0 +1,17 @@
+{
+    "items": [
+        {"key": "menu.start_game", "value": "Start Game"},
+        {"key": "menu.settings", "value": "Settings"},
+        {"key": "menu.quit", "value": "Quit"},
+        {"key": "menu.quit_confirm", "value": "Are you sure you want to quit?"},
+        {"key": "menu.yes", "value": "Yes"},
+        {"key": "menu.no", "value": "No"},
+        {"key": "menu.resume", "value": "Resume"},
+        {"key": "menu.quit_to_menu", "value": "Quit to Menu"},
+        {"key": "menu.keybinds", "value": "Key Binds"},
+        {"key": "menu.languages", "value": "Languages"},
+        {"key": "menu.audio", "value": "Audio"},
+        {"key": "menu.pause", "value": "Pause"},
+        {"key": "menu.game_over", "value": "Game Over"}
+    ]
+}

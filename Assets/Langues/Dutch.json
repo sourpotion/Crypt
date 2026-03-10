@@ -1,0 +1,17 @@
+{
+    "items": [
+        {"key": "menu.start_game", "value": "Spelen"},
+        {"key": "menu.settings", "value": "Instellingen"},
+        {"key": "menu.quit", "value": "Afsluiten"},
+        {"key": "menu.quit_confirm", "value": "Weet je zeker dat je wilt afsluiten?"},
+        {"key": "menu.yes", "value": "Ja"},
+        {"key": "menu.no", "value": "Nee"},
+        {"key": "menu.resume", "value": "Doorgaan"},
+        {"key": "menu.quit_to_menu", "value": "Terug naar menu"},
+        {"key": "menu.keybinds", "value": "Toetsenbordinstellingen"},
+        {"key": "menu.languages", "value": "Talen"},
+        {"key": "menu.audio", "value": "Audio"},
+        {"key": "menu.pause", "value": "Pauze"},
+        {"key": "menu.game_over", "value": "Spel Vorbei"}
+    ]
+}

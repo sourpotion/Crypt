@@ -46,6 +46,7 @@ public class Enemie : MonoBehaviour
     protected float currentTimerOfAnger;
     protected NavMeshAgent agent;
     protected int layerMaskRaycast; //thign where raycast can't past through
+    protected Vector3 spawnPos;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -53,6 +54,7 @@ public class Enemie : MonoBehaviour
     {
         layerMaskRaycast = ~LayerMask.GetMask("Ignore RayCast"); //setup
         agent = GetComponent<NavMeshAgent>();
+        spawnPos = transform.position;
 
         for (int id = 0; id < partrolsAreas.Length; id++)
         {
@@ -177,6 +179,7 @@ public class Enemie : MonoBehaviour
     protected virtual void Attack()
     {
         print("Attack*");
+        GameMangeren.Instance.PlrDied();
     }
 
     protected virtual bool SeeThePlr()
@@ -203,5 +206,16 @@ public class Enemie : MonoBehaviour
         string hitTag = collision.transform.tag;
 
         if (hitTag == targetTag) {Attack();}
+    }
+
+    public virtual void Respawn()
+    {
+        agent.Warp(spawnPos);
+
+        //default seettings
+        isAnger = false;
+        
+        //stop the sfx
+        if (chaseSound && chaseSound.isPlaying) {chaseSound.Stop();}
     }
 }

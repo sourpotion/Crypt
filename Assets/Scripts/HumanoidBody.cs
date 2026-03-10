@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using DG.Tweening;
 using Unity.Mathematics;
@@ -39,11 +40,33 @@ public class HumanoidBody : MonoBehaviour
 
     private DepthOfField dof;
     private float colorTweenTime = 1f;
+    private Dictionary<string, System.Action> brokenPartActions;
+    private Dictionary<string, System.Action> healedPartActions;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         volume.profile.TryGet<DepthOfField>(out dof);
+
+        brokenPartActions = new Dictionary<string, System.Action>()
+        {
+            { "Head", HeadBroken },
+            { "LeftArm", LeftArmBroken },
+            { "RightArm", RightArmBroken },
+            { "Torso", TorsoBroken },
+            { "LeftLeg", LeftLegBroken },
+            { "RightLeg", RightLegBroken }
+        };
+
+        healedPartActions = new Dictionary<string, System.Action>()
+        {
+            { "Head", HeadHealed },
+            { "LeftArm", LeftArmHealed },
+            { "RightArm", RightArmHealed },
+            { "Torso", TorsoHealed },
+            { "LeftLeg", LeftLegHealed },
+            { "RightLeg", RightLegHealed }
+        };
 
         //debug
         foreach (Bodys body in bodys)
@@ -53,6 +76,8 @@ public class HumanoidBody : MonoBehaviour
                 Debug.LogWarning("add in body the info");
             }
         }
+
+        GameMangeren.Instance.SaveGameFile();
     }
 
     public void BreakPart(string partName)
@@ -65,16 +90,9 @@ public class HumanoidBody : MonoBehaviour
         bodyPart.imageOfBody.DOColor(Color.red, colorTweenTime);
 
         //Fire the Function
-        string methodName = partName + "Broken";
-        MethodInfo method = this.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-
-        if (method != null)
+        if (brokenPartActions.TryGetValue(partName, out var action))
         {
-            method.Invoke(this, new object[] {bodyPart});
-        }
-        else
-        {
-            Debug.LogWarning(methodName + " is not a funtion");
+            action();
         }
         
     }
@@ -89,25 +107,18 @@ public class HumanoidBody : MonoBehaviour
         bodyPart.imageOfBody.DOColor(Color.black, colorTweenTime);
 
         //Fire the Function
-        string methodName = partName + "Healed";
-        MethodInfo method = this.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-
-        if (method != null)
+        if (brokenPartActions.TryGetValue(partName, out var action))
         {
-            method.Invoke(this, new object[] {bodyPart});
-        }
-        else
-        {
-            Debug.LogWarning(methodName + " is not a funtion");
+            action();
         }
     }
 
-    void HeadBroken(Bodys bodyPart)
+    void HeadBroken()
     {
         dof.active = true;
     }
 
-    void LeftArmBroken(Bodys bodyPart)
+    void LeftArmBroken()
     {
         currentInteractionNerf += interactionNerf;
         
@@ -115,7 +126,7 @@ public class HumanoidBody : MonoBehaviour
         currentInteractionNerf = math.clamp(currentInteractionNerf, 0, interactionNerf * 2);
     }
 
-    void RightArmBroken(Bodys bodyPart)
+    void RightArmBroken()
     {
         currentInteractionNerf += interactionNerf;
         
@@ -123,7 +134,7 @@ public class HumanoidBody : MonoBehaviour
         currentInteractionNerf = math.clamp(currentInteractionNerf, 0, interactionNerf * 2);
     }
 
-    void LeftArmHealed(Bodys bodyPart)
+    void LeftArmHealed()
     {
         currentInteractionNerf -= interactionNerf;
         
@@ -131,7 +142,7 @@ public class HumanoidBody : MonoBehaviour
         currentInteractionNerf = math.clamp(currentInteractionNerf, 0, interactionNerf * 2);
     }
 
-    void RightArmHealed(Bodys bodyPart)
+    void RightArmHealed()
     {
         currentInteractionNerf -= interactionNerf;
         
@@ -139,12 +150,12 @@ public class HumanoidBody : MonoBehaviour
         currentInteractionNerf = math.clamp(currentInteractionNerf, 0, interactionNerf * 2);
     }
 
-    void HeadHealed(Bodys bodyPart)
+    void HeadHealed()
     {
         dof.active = false;
     }
 
-    void TorsoBroken(Bodys bodyPart)
+    void TorsoBroken()
     {
         currentMaxStaminaNerf += maxStaminaNerf;
         currentStaminaRegNerf += maxStaminaRegNerf;
@@ -154,7 +165,7 @@ public class HumanoidBody : MonoBehaviour
         currentMaxStaminaNerf = math.clamp(currentMaxStaminaNerf, 0, maxStaminaRegNerf);
     }
 
-    void TorsoHealed(Bodys bodyPart)
+    void TorsoHealed()
     {
         currentMaxStaminaNerf -= maxStaminaNerf;
         currentStaminaRegNerf = maxStaminaRegNerf;
@@ -164,25 +175,25 @@ public class HumanoidBody : MonoBehaviour
         currentMaxStaminaNerf = math.clamp(currentMaxStaminaNerf, 0, maxStaminaRegNerf);
     }
 
-    void LeftLegBroken(Bodys bodyPart)
+    void LeftLegBroken()
     {
         currentSpeedNerf += downSpeedALegBroken;
         currentSpeedNerf = math.clamp(currentSpeedNerf, 0, downSpeedALegBroken * 2); //if it every go at sametime u never go slower then the max slowness
     }
 
-    void LeftLegHealed(Bodys bodyPart)
+    void LeftLegHealed()
     {
         currentSpeedNerf -= downSpeedALegBroken;
         currentSpeedNerf = math.clamp(currentSpeedNerf, 0, downSpeedALegBroken * 2); //if it every go at sametime u never go slower then the max slowness
     }
 
-    void RightLegBroken(Bodys bodyPart)
+    void RightLegBroken()
     {
         currentSpeedNerf += downSpeedALegBroken;
         currentSpeedNerf = math.clamp(currentSpeedNerf, 0, downSpeedALegBroken * 2); //if it every go at sametime u never go slower then the max slowness
     }
 
-    void RightLegHealed(Bodys bodyPart)
+    void RightLegHealed()
     {
         currentSpeedNerf -= downSpeedALegBroken;
         currentSpeedNerf = math.clamp(currentSpeedNerf, 0, downSpeedALegBroken * 2); //if it every go at sametime u never go slower then the max slowness
@@ -205,5 +216,12 @@ public class HumanoidBody : MonoBehaviour
         if (bodyPart == null) {Debug.LogWarning("name is invalid: " + name); return false;}
 
         return bodyPart.broken;
+    }
+
+    public (string name, bool isBroken) GetInfo(int id)
+    {
+        Bodys currentBodyInfo = bodys[id];
+
+        return (currentBodyInfo.name, currentBodyInfo.broken);
     }
 }
