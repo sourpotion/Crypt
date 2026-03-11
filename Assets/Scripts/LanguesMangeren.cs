@@ -19,7 +19,7 @@ public class LanguesMangeren : MonoBehaviour
     {
         currentLangue = defaultLangue;
 
-        path = Path.Combine(Application.streamingAssetsPath, "Langues/" + currentLangue + ".json");
+        //path = Path.Combine(Application.streamingAssetsPath, "Langues/" + currentLangue + ".json");
         string jsonText = File.ReadAllText(path);
     }
 
