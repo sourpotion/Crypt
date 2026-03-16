@@ -10,9 +10,6 @@ using UnityEngine.UI;
 
 public class HumanoidBody : MonoBehaviour
 {
-    [Header("settings")]
-    public float walkSpeed = 8;
-    public float runSpeed = 12;
 
     [System.Serializable]
     private class Bodys
@@ -162,7 +159,7 @@ public class HumanoidBody : MonoBehaviour
 
         //debug
         currentMaxStaminaNerf = math.clamp(currentMaxStaminaNerf, 0, maxStaminaNerf);
-        currentMaxStaminaNerf = math.clamp(currentMaxStaminaNerf, 0, maxStaminaRegNerf);
+        currentStaminaRegNerf = math.clamp(currentStaminaRegNerf, 0, maxStaminaRegNerf);
     }
 
     void TorsoHealed()
@@ -172,7 +169,7 @@ public class HumanoidBody : MonoBehaviour
 
         //debug
         currentMaxStaminaNerf = math.clamp(currentMaxStaminaNerf, 0, maxStaminaNerf);
-        currentMaxStaminaNerf = math.clamp(currentMaxStaminaNerf, 0, maxStaminaRegNerf);
+        currentStaminaRegNerf = math.clamp(currentStaminaRegNerf, 0, maxStaminaRegNerf);
     }
 
     void LeftLegBroken()

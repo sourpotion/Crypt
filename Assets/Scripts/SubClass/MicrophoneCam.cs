@@ -6,8 +6,9 @@ public class MicrophoneCam : AudioListeren
     [HideInInspector] public Action onEnemieHear;
 
     private Transform plr;
+    private Outline outlineVfx;
     private string plrTag = "Player"; 
-    private float disantToBeHighLight = 50f;
+    private float disantToBeHighLight = 25f;
     private bool isHighlighted = false;
 
     protected override void Start()
@@ -16,6 +17,7 @@ public class MicrophoneCam : AudioListeren
 
         //add new function
         plr = GameObject.FindGameObjectWithTag(plrTag).transform;
+        outlineVfx = gameObject.GetComponent<Outline>();
     }
 
     protected override void Update()
@@ -44,6 +46,7 @@ public class MicrophoneCam : AudioListeren
     void ToggleHighlight()
     {
         isHighlighted = !isHighlighted;
+        outlineVfx.enabled = !outlineVfx.enabled;
         print(isHighlighted + " is highligt");
     }
 }
