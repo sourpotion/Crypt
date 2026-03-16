@@ -11,6 +11,7 @@ public class GameMangeren : MonoBehaviour
     [HideInInspector] public bool gameIsPause; // of the game is paused
     [HideInInspector] public Action<Vector3, float> onMakingNoise; //send to everybody who want hear
     [HideInInspector] public bool plrDied = false;
+    [HideInInspector] public bool plrHiding = false;
 
     //soon make it better but for now
     [Header("debug")]
