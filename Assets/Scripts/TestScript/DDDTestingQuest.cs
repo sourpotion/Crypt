@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class DDDTestingQuest : MonoBehaviour
 {
-    QeustMangeren qeustMangeren;
+    QuestMangeren qeustMangeren;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        qeustMangeren = QeustMangeren.Instance;
-        StartCoroutine(Test());
+        qeustMangeren = QuestMangeren.Instance;
+        qeustMangeren.AddQuests(1);
     }
 
     IEnumerator Test()

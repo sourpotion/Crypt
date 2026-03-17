@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class QeustMangeren : MonoBehaviour
+public class QuestMangeren : MonoBehaviour
 {
-    public static QeustMangeren Instance { get; private set; } //make it global
+    public static QuestMangeren Instance { get; private set; } //make it global
     public Transform uiQuestHolder;
     public RectTransform uiQuestPanel; //don't got to do .getcommpoment
 
@@ -14,9 +14,6 @@ public class QeustMangeren : MonoBehaviour
         [Header("Settings")]
         public int questId;
         public QuestBasic questScript;
-        
-        [Header("could")]
-        public int nextQuest = 0;
 
         [HideInInspector] public bool complete = false;
         [HideInInspector] public bool isActive = false;
@@ -42,12 +39,6 @@ public class QeustMangeren : MonoBehaviour
         {
             quest.questScript.questId = quest.questId;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     Quests GetQuests(int id)
@@ -80,6 +71,7 @@ public class QeustMangeren : MonoBehaviour
         //ui*
         GameObject newGuestPanel = Instantiate(uiQuestPanel.gameObject, uiQuestHolder);
         RectTransform rectTransform = newGuestPanel.GetComponent<RectTransform>();
+
         questToAdd.questScript.questText = newGuestPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         questToAdd.uiQuestPanel = rectTransform;
         uiQuestsPanels.Add(rectTransform);
@@ -91,6 +83,8 @@ public class QeustMangeren : MonoBehaviour
 
     public void RemoveQuests(int questId)
     {
+        print(questId); //debug so u know for assement 
+
         //get the qeust
         Quests questToRemove = GetQuests(questId);
         
@@ -106,32 +100,24 @@ public class QeustMangeren : MonoBehaviour
         uiQuestsPanels.Remove(questToRemove.uiQuestPanel);
         Destroy(questToRemove.uiQuestPanel.gameObject);
         ResetUi();
-        
-        // add if it have a follow one
-        if (questToRemove.nextQuest != 0) {AddQuests(questToRemove.nextQuest);}
     }
 
     void ResetUi()
     {
+        float yOffset = 0;
+
         for (int i = 0; i < uiQuestsPanels.Count; i++)
         {
+            // get the ui
             RectTransform currentUi = uiQuestsPanels[i];
-
-            // Make sure pivot is top-center
+            
+            //set the pivot debug
             currentUi.pivot = new Vector2(0.5f, 1f);
 
-            // Place panels downward
             float panelHeight = currentUi.rect.height;
-            float yOffset = 0f;
-
-            // sum heights + spacing of all previous panels
-            for (int j = 0; j < i; j++)
-            {
-                yOffset += uiQuestsPanels[j].rect.height + spaceBetweenQuest;
-            }
 
             currentUi.anchoredPosition = new Vector2(0, -yOffset);
-            //kk i did it for g###amm 1 hour how te f#ck does it work f#ck
+            yOffset += panelHeight + spaceBetweenQuest;
         }
     }
 }
