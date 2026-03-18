@@ -18,7 +18,7 @@ public class Cam : MonoBehaviour
     void Start()
     {
         
-        layerMaskRaycast = ~LayerMask.GetMask("Ignore RayCast");
+        layerMaskRaycast = ~LayerMask.GetMask("Ignore Raycast");
         camLightHitboxRedLight = camLightHitbox.GetComponent<Light>();
         angleOfCam = camLightHitboxRedLight.innerSpotAngle / 2;
         //camSeeDisant = camLightHitboxRedLight.range;

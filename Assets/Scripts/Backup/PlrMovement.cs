@@ -115,6 +115,7 @@ public class PlrMovement : MonoBehaviour
 
     void Move()
     {
+        /*
         transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
         
         //set the value
@@ -130,6 +131,17 @@ public class PlrMovement : MonoBehaviour
         if (delta.magnitude > currentSpeedFrame) {delta = delta.normalized * currentSpeedFrame;}
 
         cc.Move(delta * Time.deltaTime);
+        cc.Move(gravityVelocity * Time.deltaTime);
+        */
+
+        transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
+        
+        //set the value
+        float currentSpeedFrame = currentMoveSpeed - humBody.currentSpeedNerf;
+        Vector3 move = (transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal")).normalized;
+        Vector3 gravityVelocity = transform.up * gravity;
+
+        cc.Move(move * currentMoveSpeed * Time.deltaTime);
         cc.Move(gravityVelocity * Time.deltaTime);
     }
 
