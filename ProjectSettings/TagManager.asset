@@ -4,7 +4,14 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Enemie
+  - Key
+  - Gates
+  - Temp2.1
+  - Temp2.2
+  - Temp3.1
+  - Temp3.2
+  - Temp4.1
+  - Temp4.2
   layers:
   - Default
   - TransparentFX
