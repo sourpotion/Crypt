@@ -23,6 +23,7 @@ public class Enemie : MonoBehaviour
 
     [Header("Must")]
     public AudioSource chaseSound;
+    public Transform head;
 
     [System.Serializable]
     protected class PartrolsArea
@@ -187,14 +188,14 @@ public class Enemie : MonoBehaviour
         Vector3 targetPos = target.transform.position;
 
         //get the radious
-        Vector3 directionToTarget = targetPos - transform.position;
-        float angle = Vector3.Angle(transform.forward, directionToTarget);
+        Vector3 directionToTarget = targetPos - head.position;
+        float angle = Vector3.Angle(head.forward, directionToTarget);
 
         //check of he can see the plr
         if (angle > viewRadius) {return false;}
 
         RaycastHit hit;
-        bool hitSomething = Physics.Raycast(transform.position, directionToTarget, out hit, viewDisant, layerMaskRaycast);
+        bool hitSomething = Physics.Raycast(head.position, directionToTarget, out hit, viewDisant, layerMaskRaycast);
 
         if (!hitSomething || hit.transform.tag != targetTag) {return false;}
 
