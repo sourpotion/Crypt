@@ -17,11 +17,13 @@ public class PlrController : MonoBehaviour
     private float gravity = 0;
     private float gravityDecreaser = 5f;
     private CharacterController cc;
+    private GameMangeren gameMangeren;
 
     //robbie script* syntax is all him
 
     void Start()
     {
+        gameMangeren = GameMangeren.Instance;
         Cursor.lockState = CursorLockMode.Locked;
         cc = GetComponent<CharacterController>();
         float fov = mainCamera.GetComponent<Camera>().fieldOfView;
@@ -29,6 +31,8 @@ public class PlrController : MonoBehaviour
 
     void Update()
     {
+        if (gameMangeren.plrHiding || gameMangeren.plrDied || gameMangeren.gameIsPause)
+
         if (Input.GetKeyDown(KeyCode.LeftShift)){StopRunning();}
         else if (Input.GetKeyUp(KeyCode.LeftShift)) {StartRun();}
 
