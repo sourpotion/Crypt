@@ -48,6 +48,7 @@ public class Enemie : MonoBehaviour
     protected NavMeshAgent agent;
     protected int layerMaskRaycast; //thign where raycast can't past through
     protected Vector3 spawnPos;
+    protected GameMangeren gameMangeren;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -56,6 +57,7 @@ public class Enemie : MonoBehaviour
         layerMaskRaycast = ~LayerMask.GetMask("Ignore RayCast"); //setup
         agent = GetComponent<NavMeshAgent>();
         spawnPos = transform.position;
+        gameMangeren = GameMangeren.Instance;
 
         for (int id = 0; id < partrolsAreas.Length; id++)
         {
@@ -185,6 +187,8 @@ public class Enemie : MonoBehaviour
 
     protected virtual bool SeeThePlr()
     {
+        if (gameMangeren.plrHiding) {return false;} //plr is hiding
+
         Vector3 targetPos = target.transform.position;
 
         //get the radious
