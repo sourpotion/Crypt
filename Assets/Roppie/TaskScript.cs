@@ -43,18 +43,12 @@ public class TaskScript : MonoBehaviour
                 if (hit.CompareTag("Gates"))
                 {
                     taskUI.text = "The gates are open, now find the stairs to get to the second floor";
-                    StartCoroutine(Task1Wait());
+                    StartCoroutine(TaskWait(3f, 2));
                     tempItemChecker = false; //temporary!!!
                     taskNumber ++;
                 }
             }
         }
-    }
-
-    public IEnumerator Task1Wait()
-    {
-        yield return new WaitForSeconds(3f);
-        Task2();
     }
 
     public void Task2()
@@ -79,18 +73,12 @@ public class TaskScript : MonoBehaviour
                 if (hit.CompareTag("Temp2.2"))
                 {
                     taskUI.text = "Well done";
-                    StartCoroutine(Task2Wait());
+                    StartCoroutine(TaskWait(3f, 3));
                     tempItemChecker = false; //temporary!!!
                     taskNumber ++;
                 }
             }
         }
-    }
-
-    public IEnumerator Task2Wait()
-    {
-        yield return new WaitForSeconds(3f);
-        Task3();
     }
 
     public void Task3()
@@ -115,18 +103,12 @@ public class TaskScript : MonoBehaviour
                 if (hit.CompareTag("Temp3.2"))
                 {
                     taskUI.text = "Well done";
-                    StartCoroutine(Task3Wait());
+                    StartCoroutine(TaskWait(3f, 4));
                     tempItemChecker = false; //temporary!!!
                     taskNumber ++;
                 }
             }
         }
-    }
-
-    public IEnumerator Task3Wait()
-    {
-        yield return new WaitForSeconds(3f);
-        Task4();
     }
 
     public void Task4()
@@ -151,7 +133,7 @@ public class TaskScript : MonoBehaviour
                 if (hit.CompareTag("Temp4.2"))
                 {
                     taskUI.text = "Well done";
-                    StartCoroutine(Task4Wait());
+                    StartCoroutine(TaskWait(3f, 5));
                     tempItemChecker = false; //temporary!!!
                     taskNumber ++;
                 }
@@ -159,9 +141,26 @@ public class TaskScript : MonoBehaviour
         }
     }
 
-    public IEnumerator Task4Wait()
+public IEnumerator TaskWait(float time, int taskNumber)
+{
+    yield return new WaitForSeconds(time);
+
+
+    if (taskNumber == 2)
     {
-        yield return new WaitForSeconds(3f);
-        //Task5();
+        Task2();
+    } 
+    else if (taskNumber == 3)
+    {
+        Task3();
     }
+    else if (taskNumber == 4)
+    {     
+        Task4();
+    } 
+    //else if (taskNumber == 5)
+    //{
+    //  Task5();
+    //} 
+}
 }
