@@ -1,11 +1,15 @@
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlrMovement : MonoBehaviour
 {
+    [Header("must")]
     public GameObject mainCamera;
     public HumanoidBody humBody;
+    public Volume volume;
 
     [Header("SFX")]
     public AudioSource runningSfx;
@@ -18,20 +22,21 @@ public class PlrMovement : MonoBehaviour
     private GameMangeren gameMangeren;
     private float defaultMaxStamina = 100;
     private float currentMoveSpeed;
-    private float runSpeed = 14f;
-    private float defaultMovespeed = 8f;
-    private float fov;
+    private float runSpeed = 10f;
+    private float defaultMovespeed = 6f;
     private float staminaDecreaser = 30f;
     private float staminaIncreaser = 7f;
     private float sensitivity = 1f;
     private float gravity = 0;
-    private float gravityDecreaser = 9f;
+    private float gravityDecreaser = 9.98f;
     private float timeToUseSprintAgain = 1f;
     private bool canUseSprint = true;
     private Vector3 delta = Vector3.zero; //momento
-    private float accIncrease = 1; // how fast it is gonna to the goal
-    private float friction = 1; //how fast to stop
+    private float accIncrease = 4; // how fast it is gonna to the goal
+    private float friction = 4; //how fast to stop
     private CharacterController cc;
+    private LensDistortion lensDistortion;
+    private Vector3 move = Vector3.zero; //so when not moving u can't lose stamina
 
     //robbie script* syntax is all him
 
@@ -40,15 +45,15 @@ public class PlrMovement : MonoBehaviour
         currentMoveSpeed = defaultMovespeed;
         Cursor.lockState = CursorLockMode.Locked;
         cc = GetComponent<CharacterController>();
-        fov = mainCamera.GetComponent<Camera>().fieldOfView;
         gameMangeren = GameMangeren.Instance;
         maxStamina = defaultMaxStamina;
+        volume.profile.TryGet<LensDistortion>(out lensDistortion);
     }
 
     void Update()
     {
         //debug
-        if (gameMangeren.plrDied || gameMangeren.gameIsPause) {return;}
+        if (gameMangeren.plrHiding || gameMangeren.plrDied || gameMangeren.gameIsPause) {return;}
 
         Gravity();
         Move();
@@ -56,15 +61,24 @@ public class PlrMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && canUseSprint) {StartRun();}
         else if (canUseSprint) {StopRunning();}
 
-        if (isSprinting == true) {stamina -= staminaDecreaser * Time.deltaTime;}
+        if (isSprinting == true) 
+        {
+            if (move.magnitude < .1f) {runningSfx.Stop();}
+            else
+            {
+                stamina -= staminaDecreaser * Time.deltaTime;
+
+                if (!runningSfx.isPlaying) {runningSfx.Play();}
+            }
+        }
 
         if (stamina < 0)
         {
             if (isSprinting == true)
             {   
                 currentMoveSpeed = defaultMovespeed;
+                lensDistortion.active = false;
                 stamina = 0;
-                FovEffectReset();
             }
 
             isSprinting = false;
@@ -86,7 +100,7 @@ public class PlrMovement : MonoBehaviour
             StartCoroutine(SetSprintCooldown());
             currentMoveSpeed = defaultMovespeed;
             isSprinting = false;
-            FovEffectReset();
+            lensDistortion.active = false;
 
             runningSfx.Stop();
         }
@@ -98,7 +112,7 @@ public class PlrMovement : MonoBehaviour
 
         currentMoveSpeed = runSpeed;
         isSprinting = true;
-        mainCamera.GetComponent<Camera>().fieldOfView = 75f;
+        lensDistortion.active = true;
 
         runningSfx.Play();
     }
@@ -115,25 +129,26 @@ public class PlrMovement : MonoBehaviour
 
     void Move()
     {
-        /*
+        ///*
         transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
         
         //set the value
         float currentSpeedFrame = currentMoveSpeed - humBody.currentSpeedNerf;
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         Vector3 wishVelocity = (transform.right  * move.x + transform.forward * move.z).normalized * currentSpeedFrame;
 
-        if (wishVelocity == Vector3.zero) {delta = Vector3.Lerp(delta, Vector3.zero, friction);}
+        if (wishVelocity == Vector3.zero) {delta = Vector3.Lerp(delta, Vector3.zero, friction * Time.deltaTime);}
 
-        delta = delta += wishVelocity * (accIncrease * Time.deltaTime);
+        delta += wishVelocity * (accIncrease * Time.deltaTime);
         Vector3 gravityVelocity = transform.up * gravity;
 
         if (delta.magnitude > currentSpeedFrame) {delta = delta.normalized * currentSpeedFrame;}
 
         cc.Move(delta * Time.deltaTime);
         cc.Move(gravityVelocity * Time.deltaTime);
-        */
+        //*/
 
+        /*
         transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0);
         
         //set the value
@@ -143,6 +158,7 @@ public class PlrMovement : MonoBehaviour
 
         cc.Move(move * currentMoveSpeed * Time.deltaTime);
         cc.Move(gravityVelocity * Time.deltaTime);
+        */
     }
 
     void Gravity()
@@ -150,10 +166,5 @@ public class PlrMovement : MonoBehaviour
         if (cc.isGrounded) {gravity = 0; return;}
 
         gravity -= gravityDecreaser * Time.deltaTime;
-    }
-
-    public void FovEffectReset()
-    {
-        mainCamera.GetComponent<Camera>().fieldOfView = 60f;
     }
 }
