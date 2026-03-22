@@ -4,7 +4,7 @@ using UnityEngine;
 public class TvHeadEnemie: Enemie
 {
     [Header("Stats")]
-    public float timeBeforeUsingAbility = 1f;
+    public float timeBeforeUsingAbility = 10f;
 
     [Header("Must")]
     public GameObject camFolder;
@@ -38,7 +38,7 @@ public class TvHeadEnemie: Enemie
     {
         if (unActiveCams.Count == 0) {timeWithoutSeeingThePlr = 0; return;}
 
-        if (activeCams) {activeCams.TurnOffCam();}
+        if (activeCams != null) {activeCams.TurnOffCam();}
 
         int rngNumber = UnityEngine.Random.Range(0, unActiveCams.Count);
         Cam camToActive = unActiveCams[rngNumber];

@@ -20,6 +20,7 @@ public class Enemie : MonoBehaviour
     public float runSpeed = 8f; //speed while running
     public float angerTime = 4f; //time before losing u
     public float lookingAroundDuration = 1f; //time that it look Around
+    public float attackAngle = 90f;
 
     [Header("Must")]
     public AudioSource chaseSound;
@@ -178,9 +179,33 @@ public class Enemie : MonoBehaviour
     {
         agent.SetDestination(targetPos);
     }
+    
+    protected bool PlrCanBeHit()
+    {
+        //debug
+        if (gameMangeren.plrHiding) {return false;} //plr is hiding
+
+        Vector3 targetPos = target.transform.position;
+
+        //get angle
+        Vector3 directionToTarget = targetPos - transform.position;
+        float angle = Vector3.Angle(transform.forward, directionToTarget);
+
+        //check if he can attack
+        if (angle > attackAngle) {return false;}
+
+        RaycastHit hit;
+        bool hitSomething = Physics.Raycast(transform.position, directionToTarget, out hit, viewDisant, layerMaskRaycast, QueryTriggerInteraction.Ignore);
+
+        if (!hitSomething || hit.transform.tag != targetTag) {return false;}
+
+        return true;
+    }
 
     protected virtual void Attack()
     {
+        if (!PlrCanBeHit()) {return;}
+
         print("Attack*");
         GameMangeren.Instance.PlrDied();
     }
@@ -199,7 +224,7 @@ public class Enemie : MonoBehaviour
         if (angle > viewRadius) {return false;}
 
         RaycastHit hit;
-        bool hitSomething = Physics.Raycast(head.position, directionToTarget, out hit, viewDisant, layerMaskRaycast);
+        bool hitSomething = Physics.Raycast(head.position, directionToTarget, out hit, viewDisant, layerMaskRaycast, QueryTriggerInteraction.Ignore);
 
         if (!hitSomething || hit.transform.tag != targetTag) {return false;}
 

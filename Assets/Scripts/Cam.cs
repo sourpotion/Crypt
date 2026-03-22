@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Cam : MonoBehaviour
@@ -9,6 +10,7 @@ public class Cam : MonoBehaviour
     [HideInInspector] public GameObject target; //not proof multiple target but then i have to rewrite if that is so this then //also we get this because we don't want to u knw do this 500 times on public or i should ask the server for the target
     
     private bool enemieOnIt = false;
+    private float timeBeforeSeeingIframe = 1;
     private float angleOfCam;
     private float camSeeDisant = 100f;
     private LayerMask layerMaskRaycast; //thign where raycast can't past through
@@ -64,9 +66,11 @@ public class Cam : MonoBehaviour
         return true;
     }
 
-    void TurnOnCam()
+    IEnumerator TurnOnCam()
     {
         camLightHitboxRedLight.enabled = true;
+        yield return new WaitForSeconds(timeBeforeSeeingIframe);
+        enemieOnIt = true;
     }
 
     public void TurnOffCam()
@@ -81,8 +85,7 @@ public class Cam : MonoBehaviour
         if (!enemieOnIt)
         {
             
-            TurnOnCam();
-            enemieOnIt = true;
+            StartCoroutine(TurnOnCam());
         }
     }
 }
