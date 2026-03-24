@@ -18,7 +18,7 @@ public class InteractionManager : MonoBehaviour
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 20f, interactableLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, 20f, ~0, QueryTriggerInteraction.Ignore))
         {
             var interactable = hit.collider.GetComponent<IInteractable>();
 

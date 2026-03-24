@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Cam : MonoBehaviour
@@ -6,19 +7,21 @@ public class Cam : MonoBehaviour
     [Header("Must")]
     public GameObject camLightHitbox;
     [HideInInspector] public Action seePlr; //so when cam see the plr it can send a message back
+    [HideInInspector] public GameObject target; //not proof multiple target but then i have to rewrite if that is so this then //also we get this because we don't want to u knw do this 500 times on public or i should ask the server for the target
     
-    private GameObject target; //not proof multiple target but then i have to rewrite if that is so this then //also we get this because we don't want to u knw do this 500 times on public or i should ask the server for the target
     private bool enemieOnIt = false;
+    private float timeBeforeSeeingIframe = 1;
     private float angleOfCam;
     private float camSeeDisant = 100f;
-    [SerializeField] private LayerMask layerMaskRaycast; //thign where raycast can't past through
+    private LayerMask layerMaskRaycast; //thign where raycast can't past through
     private Light camLightHitboxRedLight;
+    private GameMangeren gameMangeren;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-        layerMaskRaycast = ~LayerMask.GetMask("Ignore RayCast");
+        gameMangeren = GameMangeren.Instance;
+        layerMaskRaycast = ~LayerMask.GetMask("Ignore Raycast");
         camLightHitboxRedLight = camLightHitbox.GetComponent<Light>();
         angleOfCam = camLightHitboxRedLight.innerSpotAngle / 2;
         //camSeeDisant = camLightHitboxRedLight.range;
@@ -33,17 +36,16 @@ public class Cam : MonoBehaviour
 
             //send mesage it see plr
             seePlr.Invoke();
-            seePlr = null;
 
             //set it to normal
-            enemieOnIt = false;
             TurnOffCam();
         }
     }
 
     bool CanSeePlr()
     {
-        
+        if (gameMangeren.gameIsPause || gameMangeren.plrHiding || gameMangeren.plrDied) {return false;}
+
         Vector3 targetPos = target.transform.position;
 
         //get the radious
@@ -55,7 +57,7 @@ public class Cam : MonoBehaviour
         if (angle > angleOfCam || disant > camSeeDisant) {return false;}
 
         RaycastHit hit;
-        bool hitSomething = Physics.Raycast(camLightHitbox.transform.position, directionToTarget, out hit, camSeeDisant, layerMaskRaycast);
+        bool hitSomething = Physics.Raycast(camLightHitbox.transform.position, directionToTarget, out hit, camSeeDisant, layerMaskRaycast, QueryTriggerInteraction.Ignore);
         
         Debug.DrawLine(camLightHitbox.transform.position, hit.point, Color.red, 20f);
 
@@ -64,27 +66,26 @@ public class Cam : MonoBehaviour
         return true;
     }
 
-    void TurnOnCam()
+    IEnumerator TurnOnCam()
     {
         camLightHitboxRedLight.enabled = true;
+        yield return new WaitForSeconds(timeBeforeSeeingIframe);
+        enemieOnIt = true;
     }
 
     public void TurnOffCam()
     {
         camLightHitboxRedLight.enabled = false;
+        enemieOnIt = false;
     }
 
-    public void SetEnemieOnCam(GameObject enemieTarget) //if frame perfect moment it is mabye a bug
+    public void SetEnemieOnCam() //if frame perfect moment it is mabye a bug
     {
-        print(enemieTarget.name);
 
         if (!enemieOnIt)
         {
             
-            TurnOnCam();
-            enemieOnIt = true;
+            StartCoroutine(TurnOnCam());
         }
-
-        if (target == null) {target = enemieTarget;}
     }
 }

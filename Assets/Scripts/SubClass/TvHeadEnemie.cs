@@ -4,13 +4,13 @@ using UnityEngine;
 public class TvHeadEnemie: Enemie
 {
     [Header("Stats")]
-    public float timeBeforeUsingAbility = 1f;
+    public float timeBeforeUsingAbility = 10f;
 
     [Header("Must")]
     public GameObject camFolder;
     public GameObject audiosCamsFolder;
 
-    private List<Cam> activeCams = new List<Cam>();
+    private Cam activeCams;
     private List<Cam> unActiveCams = new List<Cam>();
     private float timeWithoutSeeingThePlr = 0f;
 
@@ -18,15 +18,7 @@ public class TvHeadEnemie: Enemie
     {
         base.Start();
 
-        //set the all of the cam to camActive
-        int ttCams = camFolder.transform.childCount;
-
-        for (int i = 0; i < ttCams; i++)
-        {
-            Cam camScript = camFolder.transform.GetChild(i).gameObject.GetComponent<Cam>();
-            unActiveCams.Add(camScript);
-        }
-
+        AbilitySetup();
         SecondAbility();
     }
 
@@ -46,15 +38,33 @@ public class TvHeadEnemie: Enemie
     {
         if (unActiveCams.Count == 0) {timeWithoutSeeingThePlr = 0; return;}
 
+        if (activeCams != null) {activeCams.TurnOffCam();}
+
         int rngNumber = UnityEngine.Random.Range(0, unActiveCams.Count);
         Cam camToActive = unActiveCams[rngNumber];
-        unActiveCams.Remove(camToActive);
 
-        activeCams.Add(camToActive);
-        camToActive.SetEnemieOnCam(target);
-        camToActive.seePlr += GetAnger;
+        activeCams = camToActive;
+        camToActive.SetEnemieOnCam();
 
         timeWithoutSeeingThePlr = 0;
+    }
+
+    void AbilitySetup()
+    {
+        //set the all of the cam to camActive
+        int ttCams = camFolder.transform.childCount;
+
+        for (int i = 0; i < ttCams; i++)
+        {
+            Cam camScript = camFolder.transform.GetChild(i).gameObject.GetComponent<Cam>();
+            unActiveCams.Add(camScript);
+        }
+
+        foreach (Cam cam in unActiveCams)
+        {
+            cam.seePlr += GetAnger;
+            cam.target = target;
+        }
     }
 
     void SecondAbility()
@@ -69,24 +79,8 @@ public class TvHeadEnemie: Enemie
 
     protected override void GetAnger()
     {
-        if (!isAnger)
-        {
-            isAnger = true;
-            agent.speed = runSpeed;
-            chaseSound.Play();
-            state = "Chasing";
+        base.GetAnger();
 
-            for (int i = 0; i < activeCams.Count; i++)
-            {
-                Cam oldCam = activeCams[i];
-                oldCam.TurnOffCam();
-
-                activeCams.RemoveAt(i);
-                unActiveCams.Add(oldCam);
-            }
-        }
-
-        currentTimerOfAnger = 0f;
         timeWithoutSeeingThePlr = 0f;
     }
 
