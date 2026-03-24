@@ -2,6 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameMangeren : MonoBehaviour
 {
@@ -13,11 +14,6 @@ public class GameMangeren : MonoBehaviour
     [HideInInspector] public bool plrDied = false;
     [HideInInspector] public bool plrHiding = false;
 
-    //soon make it better but for now
-    [Header("debug")]
-    public GameObject plr;
-    public HumanoidBody humBody;
-
     //saving things
     [System.Serializable]
     private class humBodyInfo
@@ -26,8 +22,13 @@ public class GameMangeren : MonoBehaviour
         public bool isBroken;
     }
 
+    [Header("Debug")]
+
     private Vector3 plrPos;
     private humBodyInfo[] bodysInfo = new humBodyInfo[6];
+    [SerializeField] private GameObject plr;
+    private string plrTag = "Player";
+    [SerializeField] private HumanoidBody humBody;
 
     void Awake()
     {
@@ -35,6 +36,7 @@ public class GameMangeren : MonoBehaviour
         {
             Instance = this;                   // assign the singleton
             DontDestroyOnLoad(gameObject);     // make it persistent across scenes
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -52,6 +54,17 @@ public class GameMangeren : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (!plr)
+        {
+            plr = GameObject.FindGameObjectWithTag(plrTag);
+
+            if (plr != null) {humBody = plr.GetComponent<HumanoidBody>();}
+
+        }
     }
 
     public void PlrDied()

@@ -24,6 +24,7 @@ public class UiLogic : MonoBehaviour
 
     [Header("Settings")]
     public bool inGame;
+    [SerializeField] private GameObject backGround; //for now ***
 
     [System.Serializable]
     private class Audios
@@ -150,6 +151,7 @@ public class UiLogic : MonoBehaviour
         }
 
         startSchrem.SetActive(!GameMangeren.Instance.gameIsPause); // it can just deactive a deavtive ui*
+        backGround.SetActive(!GameMangeren.Instance.gameIsPause);
         currentUi = startSchrem;
 
         GameMangeren.Instance.gameIsPause = !GameMangeren.Instance.gameIsPause; //toggle this
@@ -234,19 +236,6 @@ public class UiLogic : MonoBehaviour
                 ChangeSound(newValue, audiosInfo.audioName);   //changeItInAudio
             }
 
-            foreach (KeyRebinding info in keyRebinding)
-            {
-                var action = plrControl.asset.FindAction(info.actionName);
-                string keybindPath = LoadKeyBinds(info.actionName + "Keybind");
-
-                if (!string.IsNullOrEmpty(keybindPath))
-                {
-                    action.ApplyBindingOverride(0, keybindPath); //pput the newOne in here
-                }
-
-                info.text.text = action.bindings[0].ToDisplayString(); //show the current keybind 
-            }
-
             GameMangeren.Instance.audioSaveAlreadyDone = true; //debounce
         }
         else
@@ -259,13 +248,19 @@ public class UiLogic : MonoBehaviour
 
                 audiosInfo.slider.value = newValue;
             }
+        }
 
-            foreach (KeyRebinding info in keyRebinding)
+        foreach (KeyRebinding info in keyRebinding)
+        {
+            var action = plrControl.asset.FindAction(info.actionName);
+            string keybindPath = LoadKeyBinds(info.actionName + "Keybind");
+
+            if (!string.IsNullOrEmpty(keybindPath))
             {
-                var action = plrControl.asset.FindAction(info.actionName);
-
-                info.text.text = action.bindings[0].ToDisplayString(); //show the current keybind 
+                action.ApplyBindingOverride(0, keybindPath); //pput the newOne in here
             }
+
+            info.text.text = action.bindings[0].ToDisplayString(); //show the current keybind 
         }
     }
 
