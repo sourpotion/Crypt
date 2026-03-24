@@ -14,6 +14,7 @@ public class PlrMovement : MonoBehaviour
     [HideInInspector] public bool isSprinting = false;
     [HideInInspector] public float stamina = 100;
     [HideInInspector] public float maxStamina = 100; //debug
+    [HideInInspector] public int selectedIndex = 0;
 
     private GameMangeren gameMangeren;
     private float defaultMaxStamina = 100;
