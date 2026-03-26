@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SplashScreen : MonoBehaviour
 {
     public Image splashScreen;
-    private string startSceneName = "SampleScene";
+    private string startSceneName = "Basic StartScreen";
     private float waitTimeBeforeSplash = 2f;
     private float waitBeforeEnding = 2f;
     private float waitTimeAfterSplash = 1f;

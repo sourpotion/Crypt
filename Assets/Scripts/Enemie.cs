@@ -23,7 +23,6 @@ public class Enemie : MonoBehaviour
     public float attackAngle = 90f;
 
     [Header("Must")]
-    public AudioSource chaseSound;
     public Transform head;
 
     [System.Serializable]
@@ -99,24 +98,7 @@ public class Enemie : MonoBehaviour
             GetAnger();
         }
 
-        if (isAnger)
-        {
-            if (currentTimerOfAnger > angerTime) 
-            {
-                //stop knowing where plr is
-                isAnger = false; //is not anger anymore
-                chaseSound.Stop(); //stop the chase music
-                agent.speed = walkSpeed; //soon fix
-                alrHaveLookAround = false; //go lookaround when got to the last trace
-                state = "looking for plr last pos";
-            }
-            else //optimaseren
-            {
-                currentTimerOfAnger += Time.deltaTime; 
-            }
-
-            GoToTarget(target.transform.position);
-        }
+        if (isAnger) {InsideUpdate_Anger();}
         else
         {
             if (!isLookingAround && !agent.pathPending &&
@@ -126,6 +108,27 @@ public class Enemie : MonoBehaviour
                 Think();
             }
         }
+    }
+
+    protected virtual void OnUnAnger()
+    {
+        //stop knowing where plr is
+        isAnger = false; //is not anger anymore
+        agent.speed = walkSpeed; //soon fix
+        alrHaveLookAround = false; //go lookaround when got to the last trace
+        state = "looking for plr last pos";
+    }
+
+    protected virtual void InsideUpdate_Anger()
+    {
+        
+        if (currentTimerOfAnger > angerTime) {OnUnAnger();}
+        else 
+        {
+            currentTimerOfAnger += Time.deltaTime; 
+        }
+
+        GoToTarget(target.transform.position);
     }
 
     protected virtual void Think()
@@ -164,15 +167,16 @@ public class Enemie : MonoBehaviour
 
     protected virtual void GetAnger()
     {
-        if (!isAnger)
-        {
-            isAnger = true;
-            agent.speed = runSpeed;
-            chaseSound.Play();
-            state = "Chasing";
-        }
+        if (!isAnger) {OnFirstGetAnger();}
 
         currentTimerOfAnger = 0f;
+    }
+
+    protected virtual void OnFirstGetAnger()
+    {
+        isAnger = true;
+        agent.speed = runSpeed;
+        state = "Chasing";
     }
 
     protected virtual void GoToTarget(Vector3 targetPos)
@@ -244,8 +248,5 @@ public class Enemie : MonoBehaviour
 
         //default seettings
         isAnger = false;
-        
-        //stop the sfx
-        if (chaseSound && chaseSound.isPlaying) {chaseSound.Stop();}
     }
 }
