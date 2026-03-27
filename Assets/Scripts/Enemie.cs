@@ -239,7 +239,7 @@ public class Enemie : MonoBehaviour
     {
         string hitTag = collision.transform.tag;
 
-        if (hitTag == targetTag) {Attack();}
+        if (hitTag == targetTag) {Attack(); return;}
     }
 
     public virtual void Respawn()

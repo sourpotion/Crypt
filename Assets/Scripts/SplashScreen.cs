@@ -7,6 +7,10 @@ using UnityEngine.UI;
 public class SplashScreen : MonoBehaviour
 {
     public Image splashScreen;
+    
+    [Header("Sfx")]
+    public AudioSource birdSfx;
+
     private string startSceneName = "Basic StartScreen";
     private float waitTimeBeforeSplash = 2f;
     private float waitBeforeEnding = 2f;
@@ -40,6 +44,7 @@ public class SplashScreen : MonoBehaviour
 
         splashScreen.DOFade(1f, tweenTime).WaitForCompletion(); //tween in
 
+        birdSfx.Play();
         yield return new WaitForSeconds(waitBeforeEnding);
 
         splashScreen.DOFade(0f, tweenTime).WaitForCompletion(); //fade out

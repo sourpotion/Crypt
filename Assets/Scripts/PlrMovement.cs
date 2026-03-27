@@ -31,7 +31,7 @@ public class PlrController : MonoBehaviour
 
     void Update()
     {
-        if (gameMangeren.plrHiding || gameMangeren.plrDied || gameMangeren.gameIsPause)
+        if (gameMangeren.plrHiding || gameMangeren.plrDied || gameMangeren.gameIsPause || gameMangeren.plrStun)
 
         if (Input.GetKeyDown(KeyCode.LeftShift)){StopRunning();}
         else if (Input.GetKeyUp(KeyCode.LeftShift)) {StartRun();}

@@ -13,6 +13,7 @@ public class GameMangeren : MonoBehaviour
     [HideInInspector] public Action<Vector3, float> onMakingNoise; //send to everybody who want hear
     [HideInInspector] public bool plrDied = false;
     [HideInInspector] public bool plrHiding = false;
+    [HideInInspector] public bool plrStun = false;
 
     //saving things
     [System.Serializable]
@@ -106,6 +107,7 @@ public class GameMangeren : MonoBehaviour
 
         //load
         plr.transform.position = plrPos;
+        plrStun = false;
 
         //loop and set all one for one good
         foreach (humBodyInfo bodyInfo in bodysInfo)

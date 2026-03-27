@@ -12,12 +12,19 @@ public class TvHeadEnemie: Enemie
     public GameObject audiosCamsFolder;
     public AudioSource chaseSound;
     public AudioSource angerSound;
+    public AudioSource closeSfx;
+    public AudioSource killSfx;
+    public Camera deathCam;
 
     private Cam activeCams;
     private List<Cam> unActiveCams = new List<Cam>();
     private float timeWithoutSeeingThePlr = 0f;
-    [SerializeField] private bool canMove = true;
+    private bool canMove = true;
     private Animator animator;
+    private MeshRenderer plrMesh;
+    private bool isAttacking = false;
+    private string doorTag = "Door";
+    private bool openingDoor = false;
 
     protected override void Start()
     {
@@ -26,12 +33,14 @@ public class TvHeadEnemie: Enemie
         animator = GetComponent<Animator>();
         AbilitySetup();
         SecondAbility();
+        plrMesh = target.GetComponentInChildren<MeshRenderer>();
     }
 
     protected override void Update()
     {
         timeWithoutSeeingThePlr += Time.deltaTime;
 
+        if ( isAttacking) { return; }
         base.Update();
 
         if (timeWithoutSeeingThePlr >= timeBeforeUsingAbility)
@@ -85,6 +94,8 @@ public class TvHeadEnemie: Enemie
 
     protected override void GetAnger()
     {
+        if (isAttacking) { return; }
+
         base.GetAnger();
 
         timeWithoutSeeingThePlr = 0f;
@@ -118,7 +129,6 @@ public class TvHeadEnemie: Enemie
     {
         if (!canMove)
         {
-
             return;
         }
 
@@ -141,14 +151,72 @@ public class TvHeadEnemie: Enemie
         chaseSound.Play();
     }
 
+    protected override void Attack()
+    {
+        if (isAttacking) { return;}
+
+        isAttacking = true;
+        gameMangeren.plrStun = true;
+        agent.ResetPath();
+        agent.velocity = Vector3.zero;
+        deathCam.enabled = true;
+        plrMesh.enabled = false;
+        animator.SetTrigger("attack");
+        chaseSound.Stop();
+        closeSfx.Stop();
+        killSfx.Play();
+    }
+
+    public void OnAttackFinished()
+    {
+        base.Attack();
+        deathCam.enabled = false;
+        isAttacking = false;
+        gameMangeren.plrStun = false;
+        plrMesh.enabled = true;
+    }
+
     public override void Respawn()
      {
+        agent.ResetPath();
         base.Respawn();
 
         if (activeCams != null) {activeCams.TurnOffCam();}
         if (chaseSound && chaseSound.isPlaying) {chaseSound.Stop();}
         if (angerSound && angerSound.isPlaying) {angerSound.Stop();}
+        if (killSfx && killSfx.isPlaying) {killSfx.Stop();}
 
         timeWithoutSeeingThePlr = 0f;
+        closeSfx.Play();
+    }
+
+    protected IEnumerator OpenDoor(Collider door)
+    {
+        if (openingDoor) {yield break;}
+
+        openingDoor = true;
+        agent.isStopped = true;
+        agent.velocity = Vector3.zero;
+
+        DoorInteracion doorScript = door.GetComponent<DoorInteracion>();
+
+        doorScript.OpenDoor();
+        yield return new WaitForSeconds(doorScript.timeToOpen + .2f);
+
+        agent.isStopped = false;
+
+        yield return new WaitForSeconds(3f);
+
+        doorScript.CloseDoor();
+    }
+
+    protected override void OnTriggerEnter(Collider collision)
+    {
+        base.OnTriggerEnter(collision);
+        
+        if (collision.transform.tag == doorTag)
+        {
+            StartCoroutine(OpenDoor(collision));
+        }
     }
 }
