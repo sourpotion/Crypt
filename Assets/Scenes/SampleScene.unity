@@ -14945,6 +14945,11 @@ MonoBehaviour:
   mainStamina: {fileID: 448872958}
   runStaminaManger: {fileID: 2110667124}
   runStamina: {fileID: 706038680}
+--- !u!4 &1852170730 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3542852092398272455, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
+  m_PrefabInstance: {fileID: 2065068165}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1854035232
 GameObject:
   m_ObjectHideFlags: 0
@@ -16346,6 +16351,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: -4449763708514735899, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -3604482459334617583, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -16946,6 +16955,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 7603786706384944740, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cd505e736fcb8734bbbfef2e58c3a254, type: 2}
+    - target: {fileID: 7603786706384944740, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 99e11a2ff3e892547957418c334b4e4d, type: 3}
     - target: {fileID: 7632508515822956395, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 61.86163
@@ -16981,6 +16998,14 @@ PrefabInstance:
     - target: {fileID: 8062101887963229837, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
+      propertyPath: m_Name
+      value: cam
+      objectReference: {fileID: 0}
+    - target: {fileID: 8417361359673230750, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8417361359673230750, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -17026,18 +17051,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2065068176}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2065068177}
   m_SourcePrefab: {fileID: 100100000, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
 --- !u!4 &2065068166 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
-  m_PrefabInstance: {fileID: 2065068165}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2065068168 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7923098831833129734, guid: 5cc54fa3b4505464d8551e170f58d9d8, type: 3}
   m_PrefabInstance: {fileID: 2065068165}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2065068169 stripped
@@ -17108,7 +17125,7 @@ MonoBehaviour:
   angerTime: 5
   lookingAroundDuration: 2
   attackAngle: 90
-  head: {fileID: 2065068168}
+  head: {fileID: 1852170730}
   partrolsAreas:
   - patrolsFolders: {fileID: 280969071}
     areaTrigger:
@@ -17154,33 +17171,6 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
---- !u!54 &2065068177
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2065068169}
-  serializedVersion: 5
-  m_Mass: 0.0000001
-  m_LinearDamping: 0
-  m_AngularDamping: 0
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 0
-  m_ImplicitTensor: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 1
 --- !u!1001 &2069995045
 PrefabInstance:
   m_ObjectHideFlags: 0
